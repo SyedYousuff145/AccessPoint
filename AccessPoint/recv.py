@@ -17,7 +17,7 @@ SOCKPATH = "/var/run/lirc/lircd"
 
 sock = None
 client = mqtt.Client()
-client.connect('test.mosquitto.org', port=1883)
+client.connect('127.0.0.1', port=1883)
 client.loop_start()
 
 def init_irw():
