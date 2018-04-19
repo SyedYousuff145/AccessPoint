@@ -50,8 +50,8 @@ if __name__ == '__main__':
 	LED = 13
 	BULB = 21
 	LED_ON_TIME = 300
-	LED_STATE = False
-	BULB_STATE = False
+	LED_STATE = True
+	BULB_STATE = True
 
 	init_irw()
 	GPIO.setmode(GPIO.BCM)
