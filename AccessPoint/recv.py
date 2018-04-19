@@ -11,10 +11,14 @@ import socket
 import RPi.GPIO as GPIO
 import time
 import fcntl, os, errno
+import paho.mqtt.client as mqtt
 
 SOCKPATH = "/var/run/lirc/lircd"
 
 sock = None
+client = mqtt.Client()
+client.connect('test.mosquitto.org', port=1883)
+client.loop_start()
 
 def init_irw():
 	global sock
@@ -43,17 +47,28 @@ def next_key():
 		return None, None
 
 if __name__ == '__main__':
-	LED = 16
-	LED_ON_TIME = 100
+	LED = 13
+	BULB = 21
+	LED_ON_TIME = 300
 	LED_STATE = False
+	BULB_STATE = False
 
 	init_irw()
 	GPIO.setmode(GPIO.BCM)
 	GPIO.setup(LED,GPIO.OUT)
+	GPIO.setup(BULB,GPIO.OUT)
 	GPIO.output(LED, LED_STATE)
+	GPIO.output(BULB, BULB_STATE)
 		
 	while True:
 		keyname, updown = next_key()
+		if keyname:
+			print keyname
+			client.publish('buss',keyname)
+		if keyname == 'KEY_VOLUMEUP':
+			GPIO.output(BULB, True)
+		if keyname == 'KEY_VOLUMEDOWN':
+			GPIO.output(BULB, False)
 		if keyname == 'KEY_POWER':
 			if not LED_STATE:
 				GPIO.output(LED, True)
