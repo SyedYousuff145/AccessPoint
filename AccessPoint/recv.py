@@ -49,16 +49,20 @@ def next_key():
 if __name__ == '__main__':
 	LED = 13
 	BULB = 21
+	BUZZER = 5
 	LED_ON_TIME = 300
 	LED_STATE = True
 	BULB_STATE = True
+	BUZZER_STATE = False
 
 	init_irw()
 	GPIO.setmode(GPIO.BCM)
 	GPIO.setup(LED,GPIO.OUT)
 	GPIO.setup(BULB,GPIO.OUT)
+	GPIO.setup(BUZZER,GPIO.OUT)
 	GPIO.output(LED, LED_STATE)
 	GPIO.output(BULB, BULB_STATE)
+	GPIO.output(BUZZER, BUZZER_STATE)
 		
 	while True:
 		keyname, updown = next_key()
@@ -72,9 +76,13 @@ if __name__ == '__main__':
 		if keyname == 'KEY_POWER':
 			if not LED_STATE:
 				GPIO.output(LED, True)
+				GPIO.output(BUZZER, True)
 				LED_STATE = True
+				BUZZER_STATE = True
 			start = time.time()*1000
 		if (LED_STATE and time.time()*1000 - start > LED_ON_TIME):
 			GPIO.output(LED, False)
+			GPIO.output(BUZZER, False)
 			LED_STATE = False
+			BUZZER_STATE = False
 
